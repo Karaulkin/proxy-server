@@ -12,14 +12,14 @@
 Перед запуском сервиса необходимо убедиться, что окружение удовлетворяет следующим требованиям:
 ###### 1. **В проекте использованна последняя версия** [GO-1.23.3:](https://go.dev/)
 
-![Pasted image 20241126183824.png](png/Pasted image 20241126183824.png)
+![Pasted image 20241126183824.png](png/Pasted%20image%2020241126183824.png)
 
 ###### 2. **Последняя версия** [Taskfile:](https://taskfile.dev/)
 
 >[!info]
 >Для облегечения ввода команд в консоль
 
-![Pasted image 20241126184014.png](png/Pasted image 20241126184014.png)
+![Pasted image 20241126184014.png](png/Pasted%20image%2020241126184014.png)
 
 ###### 3. **GRPC и Protocol Buffers**:
 
@@ -80,7 +80,7 @@ go run cmd/client/main.go -urls="https://www.youtube.com/watch?v=RlGaKh-L5PM,htt
 
 ###### 4.2 Запуск клиента через Postman
 
-![Pasted image 20241127111942.png](png/Pasted image 20241127111942.png)
+![Pasted image 20241127111942.png](png/Pasted%20image%2020241127111942.png)
 
 
 ***
