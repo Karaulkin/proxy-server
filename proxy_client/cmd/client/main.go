@@ -29,8 +29,6 @@ func main() {
 
 	log.Info("starting client")
 
-	//TODO: Используем имя сервиса proxy_server вместо localhost grpc.Dial("proxy_server:44044", grpc.WithInsecure())
-	// TODO:чтобы клиент ждал подъем сервиса
 	conn, err := grpc.Dial("localhost:44044", grpc.WithInsecure())
 	if err != nil {
 		log.Error("failed to connect to server", slog.String("error", err.Error()))
