@@ -1,0 +1,7 @@
+env: "local"
+
+cash_path: "./storage/cache.db"
+
+grpc:
+  port: 44044
+  timeout: 10h

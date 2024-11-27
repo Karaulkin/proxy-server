@@ -1,0 +1,7 @@
+version: "3"
+
+tasks:
+  run:
+    desc: "Run client with async"
+    cmds:
+      - go run cmd/client/main.go -urls="https://www.youtube.com/watch?v=RlGaKh-L5PM,https://www.youtube.com/watch?v=ziotOZhwz9Y" -async
