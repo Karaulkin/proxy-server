@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	thumbnailv1 "github.com/Karaulkin/proto_thumbnail/gen/go/thumbnail"
 	"google.golang.org/grpc"
 	"log/slog"
@@ -15,9 +14,11 @@ import (
 )
 
 const (
-	envLocal = "local"
-	envDev   = "dev"
-	envProd  = "prod"
+	envLocal        = "local"
+	envDev          = "dev"
+	envProd         = "prod"
+	retryInterval   = 2 * time.Second // Интервал между попытками подключения
+	maxRetryTimeout = 4 * time.Minute // Максимальное время ожидания сервера
 )
 
 func main() {
@@ -29,12 +30,22 @@ func main() {
 
 	log.Info("starting client")
 
-	//TODO: Используем имя сервиса proxy_server вместо localhost grpc.Dial("proxy_server:44044", grpc.WithInsecure())
-	// TODO:чтобы клиент ждал подъем сервиса
-	conn, err := grpc.Dial("localhost:44044", grpc.WithInsecure())
-	if err != nil {
-		log.Error("failed to connect to server", slog.String("error", err.Error()))
-		os.Exit(1) // Завершаем работу при невозможности подключиться
+	var conn *grpc.ClientConn
+	var err error
+
+	// Повторные попытки подключения
+	startTime := time.Now()
+	for {
+		conn, err = grpc.Dial("proxy_server:44044", grpc.WithInsecure(), grpc.WithBlock())
+		if err == nil {
+			break
+		}
+		if time.Since(startTime) > maxRetryTimeout {
+			log.Error("failed to connect to server after multiple attempts", slog.String("error", err.Error()))
+			os.Exit(1) // Завершаем работу, если сервер не поднялся
+		}
+		log.Warn("server not ready, retrying...", slog.String("error", err.Error()))
+		time.Sleep(retryInterval)
 	}
 	defer conn.Close()
 
@@ -74,20 +85,6 @@ func fetchThumbnail(client thumbnailv1.ThumbnailClient, log *slog.Logger, url st
 	}
 
 	log.Info("fetched thumbnail", slog.String("url", resp.VideoUrl), slog.Int("bytes", len(resp.ImageData)))
-}
-
-func waitForServer(log *slog.Logger, address string, timeout time.Duration, retryInterval time.Duration) (*grpc.ClientConn, error) {
-	deadline := time.Now().Add(timeout)
-	for time.Now().Before(deadline) {
-		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithTimeout(retryInterval))
-		if err == nil {
-			log.Info("Successfully connected to server", slog.String("address", address))
-			return conn, nil
-		}
-		log.Warn("Server not available, retrying...", slog.String("address", address), slog.String("error", err.Error()))
-		time.Sleep(retryInterval)
-	}
-	return nil, fmt.Errorf("server did not become available within %s", timeout)
 }
 
 func setupLogger(env string) *slog.Logger {

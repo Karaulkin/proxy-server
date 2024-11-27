@@ -9,4 +9,4 @@ FROM ubuntu:22.04
 
 WORKDIR /app
 COPY --from=builder /app/client ./
-CMD ./client -urls="https://www.youtube.com/watch?v=RlGaKh-L5PM,https://www.youtube.com/watch?v=ziotOZhwz9Y" -async
+CMD ./client -urls="https://www.youtube.com/watch?v=JqfbfraMjW8,https://www.youtube.com/watch?v=ziotOZhwz9Y"

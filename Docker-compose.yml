@@ -1,15 +1,31 @@
+networks:
+  my_network:
+    driver: bridge
+
 services:
   proxy_server:
     build:
       context: ./proxy_server
       dockerfile: Dockerfile
+    networks:
+      - my_network
     ports:
-      - "44044:44044"  # Прокидываем порт gRPC
+      - "44044:44044"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     volumes:
-      - ./proxy_server/config:/app/config  # Монтируем конфигурационный файл
-      - ./proxy_server/storage:/app/storage  # Монтируем базу данных SQLite
+      - ./proxy_server/config:/app/config
+      - ./proxy_server/storage:/app/storage
 
   grpc_client:
     build:
       context: ./proxy_client
       dockerfile: Dockerfile
+    networks:
+      - my_network
+    depends_on:
+      - proxy_server
+
+
+
