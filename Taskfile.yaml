@@ -1,0 +1,18 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - docker compose -f /home/kirill/Documents/Task_server/Docker-compose.yml -p task_server build
+
+  up:
+    cmds:
+      - docker compose -f /home/kirill/Documents/Task_server/Docker-compose.yml -p task_server up -d
+
+  down:
+    cmds:
+      - docker compose -f /home/kirill/Documents/Task_server/Docker-compose.yml -p task_server down
+
+  logs:
+    cmds:
+      - docker compose -f /home/kirill/Documents/Task_server/Docker-compose.yml -p task_server logs -f

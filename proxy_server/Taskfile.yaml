@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  migration:
+    desc: "Generate cache storage"
+    cmds:
+      - go run ./cmd/migrator --storage-path=./storage/cache.db --migrations-path=./migrations
+
+  test:
+    desc: "Start test"
+    cmds:
+      - go run ./cmd/migrator --storage-path=./storage/cache.db --migrations-path=./tests/migrations
+      - go test proxy_server/tests
+  start:
+    desc: "Start server"
+    cmds:
+      - go run cmd/server/main.go
